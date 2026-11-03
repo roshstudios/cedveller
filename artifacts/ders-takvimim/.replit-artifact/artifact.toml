@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Dərs Cədvəlim"
+description = "Universitet tələbələri üçün AI ilə cədvəl oxuma, Alt/Üst həftə izləmə və dostlarla dərs cədvəli paylaşımı."
+version = "1.0.0"
+id = "artifacts/ders-takvimim"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20081
+
+[services.development]
+run = "pnpm --filter @workspace/ders-takvimim run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ders-takvimim", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/ders-takvimim/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20081"
+BASE_PATH = "/"
