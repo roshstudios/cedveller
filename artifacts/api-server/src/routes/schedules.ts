@@ -1,7 +1,7 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { randomBytes, randomUUID, createHash } from "node:crypto";
 import { and, eq, desc, ilike, or } from "drizzle-orm";
-import { db, schedulesTable, type StoredSchedule } from "@workspace/db";
+import { db, schedulesTable, pushSubscriptionsTable, type StoredSchedule } from "@workspace/db";
 import {
   CreateScheduleBody, CreateScheduleResponse, UpdateScheduleBody, UpdateScheduleResponse,
   GetScheduleParams, GetScheduleResponse, DeleteScheduleParams,
@@ -84,6 +84,7 @@ router.delete("/schedules/:id", async (req, res): Promise<void> => {
   if (!parsed.success) { res.status(400).json({ error: "Cədvəl identifikatoru düzgün deyil." }); return; }
   const rows = await db.delete(schedulesTable).where(and(eq(schedulesTable.id, parsed.data.id), eq(schedulesTable.ownerHash, hash))).returning({ id: schedulesTable.id });
   if (!rows.length) { res.status(404).json({ error: "Cədvəl tapılmadı." }); return; }
+  await db.delete(pushSubscriptionsTable).where(eq(pushSubscriptionsTable.scheduleId, parsed.data.id));
   res.sendStatus(204);
 });
 router.get("/directory", async (req, res): Promise<void> => {

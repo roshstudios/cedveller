@@ -11,6 +11,7 @@ import { useActiveSchedule } from '@/hooks/use-active';
 import { useToast } from '@/hooks/use-toast';
 import { PageTitle, SkeletonBlock, ErrorCard, btn } from '@/components/shell';
 import { errMsg, toInput } from '@/lib/schedule';
+import { NotificationsCard } from '@/components/notifications-card';
 
 export default function Settings() {
   const a = useActiveSchedule();
@@ -72,6 +73,8 @@ export default function Settings() {
                 <button onClick={() => navigator.clipboard.writeText(shareUrl).then(() => toast({ title: 'Keçid kopyalandı' }), () => toast({ title: 'Kopyalamaq mümkün olmadı', description: shareUrl }))} className={`${btn.ghost} w-full`} data-testid="button-copy-link"><Copy className="h-4 w-4" /> Paylaşım keçidini kopyala</button>
               )}
             </section>
+
+            <NotificationsCard scheduleId={owned.id} />
 
             <section className="rounded-[2rem] bg-card border p-5">
               <div className="font-display font-bold text-xl">Cədvəli sil</div>
